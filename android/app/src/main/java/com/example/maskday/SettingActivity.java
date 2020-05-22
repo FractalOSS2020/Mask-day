@@ -1,8 +1,5 @@
 package com.example.maskday;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.Dialog;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
@@ -15,9 +12,11 @@ import android.widget.LinearLayout;
 import android.widget.NumberPicker;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import java.util.Calendar;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener{
+public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout saveYearLayout, appInfoLayout;
     private ImageView backBtn;
@@ -34,7 +33,7 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         backBtn.setOnClickListener(this);
     }
 
-    private void init(){
+    private void init() {
         saveYearLayout = (LinearLayout) findViewById(R.id.input_year);
         appInfoLayout = (LinearLayout) findViewById(R.id.app_info);
         backBtn = (ImageView) findViewById(R.id.back_button);
@@ -42,14 +41,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     @Override
     public void onClick(View view) {
-        if(view == saveYearLayout){
+        if (view == saveYearLayout) {
             showBirthDayPicker();
-        } else if(view == backBtn){
+        } else if (view == backBtn) {
             finish();
         }
     }
 
-    private void showBirthDayPicker(){
+    private void showBirthDayPicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
 
@@ -61,12 +60,12 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         Button cancelBtn = (Button) birthDayDialog.findViewById(R.id.cancel_button);
 
         final NumberPicker picker = (NumberPicker) birthDayDialog.findViewById(R.id.number_picker);
-        picker.setMinValue(year-100);
+        picker.setMinValue(year - 100);
         picker.setMaxValue(year);
         picker.setDescendantFocusability(NumberPicker.FOCUS_AFTER_DESCENDANTS);
         setDividerColor(picker, android.R.color.white);
         picker.setWrapSelectorWheel(false);
-        picker.setValue(year-20);
+        picker.setValue(year - 20);
         picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
             @Override
             public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
@@ -92,19 +91,19 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         birthDayDialog.show();
     }
 
-    private void setDividerColor(NumberPicker picker, int color){
+    private void setDividerColor(NumberPicker picker, int color) {
         java.lang.reflect.Field[] pickerFields = NumberPicker.class.getDeclaredFields();
-        for (java.lang.reflect.Field pf : pickerFields){
-            if(pf.getName().equals("mSelectionDivider")){
+        for (java.lang.reflect.Field pf : pickerFields) {
+            if (pf.getName().equals("mSelectionDivider")) {
                 pf.setAccessible(true);
-                try{
+                try {
                     ColorDrawable colorDrawable = new ColorDrawable(color);
                     pf.set(picker, colorDrawable);
-                } catch (IllegalArgumentException e){
+                } catch (IllegalArgumentException e) {
                     e.printStackTrace();
-                } catch (Resources.NotFoundException e){
+                } catch (Resources.NotFoundException e) {
                     e.printStackTrace();
-                } catch (IllegalAccessException e){
+                } catch (IllegalAccessException e) {
                     e.printStackTrace();
                 }
                 break;
