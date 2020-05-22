@@ -15,6 +15,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -33,6 +34,48 @@ public class MainActivity extends AppCompatActivity {
     private View drawerView;
     private WebView webView;
     private String url = "https://www.naver.com/";
+    private LinearLayout settingLayout;
+    private ImageView menu;
+
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_main);
+
+        init();
+
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.loadUrl(url);
+        webView.setWebChromeClient(new WebChromeClient());
+        webView.setWebViewClient(new WebViewClientClass());
+
+
+        menu.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                drawerLayout.openDrawer(drawerView);
+
+            }
+        });
+
+
+        drawerLayout.setDrawerListener(listener);
+        drawerView.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return true;
+            }
+        });
+
+        settingLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
+                startActivity(intent);
+            }
+        });
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
@@ -45,60 +88,6 @@ public class MainActivity extends AppCompatActivity {
         return super.onKeyDown(keyCode, event);
     }
 
-
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
-
-
-//        TextView textView = findViewById(R.id.hello);
-//        textView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-//                startActivity(intent);
-//            }
-//        });
-//
-//        Button button = (Button) findViewById(R.id.button);
-//        button.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                notification();
-//
-//            }
-//        });
-
-        webView = (WebView) findViewById(R.id.webView);
-        webView.getSettings().setJavaScriptEnabled(true);
-        webView.loadUrl(url);
-        webView.setWebChromeClient(new WebChromeClient());
-        webView.setWebViewClient(new WebViewClientClass());
-
-
-        ImageView menu = (ImageView) findViewById(R.id.menu);
-        menu.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                drawerLayout.openDrawer(drawerView);
-
-            }
-        });
-
-
-        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
-        drawerView = (View) findViewById(R.id.drawer);
-
-
-        drawerLayout.setDrawerListener(listener);
-        drawerView.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                return true;
-            }
-        });
-    }
 
     DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
         @Override
@@ -121,6 +110,14 @@ public class MainActivity extends AppCompatActivity {
 
         }
     };
+
+    private void init() {
+        drawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+        menu = (ImageView) findViewById(R.id.menu);
+        webView = (WebView) findViewById(R.id.webView);
+        drawerView = (View) findViewById(R.id.drawer);
+        settingLayout = (LinearLayout) findViewById(R.id.setting_layout);
+    }
 
 
     public void notification() {
