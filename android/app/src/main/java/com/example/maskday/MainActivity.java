@@ -2,6 +2,7 @@ package com.example.maskday;
 
 import android.Manifest;
 import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -10,6 +11,8 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,11 +21,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -38,6 +44,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import java.util.Calendar;
 
 import io.realm.Realm;
+import io.realm.RealmResults;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -51,9 +58,11 @@ public class MainActivity extends AppCompatActivity {
     private View drawerView;
     private WebView webView;
     private String url = "https://fractaloss2020.github.io/";
-    private LinearLayout settingLayout;
+    private LinearLayout pushAlarmLayout, inputLayout, appInfoLayout, maskCheckLayout;
     private ImageView menu;
     private FloatingActionButton floatingActionButton;
+    private Realm realm;
+    private RealmResults<UserModel> userData;
 
 
     @Override
@@ -90,55 +99,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        settingLayout.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MainActivity.this, SettingActivity.class);
-                startActivity(intent);
-            }
-        });
-
+        /* 웹뷰 새로고침 */
         floatingActionButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 webView.reload();
             }
         });
+
+        /* 출생년도 저장장 */
+       inputLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                showBirthDayPicker();
+            }
+        });
+
+       /* 어플 정보 */
+       appInfoLayout.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+               //어플 정보 볼 수 있는 Activity 로 이동
+           }
+       });
     }
 
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
 
-        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
-            webView.goBack();
-            return true;
-        }
-
-        return super.onKeyDown(keyCode, event);
-    }
-
-
-    DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
-        @Override
-        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-
-        }
-
-        @Override
-        public void onDrawerOpened(@NonNull View drawerView) {
-
-        }
-
-        @Override
-        public void onDrawerClosed(@NonNull View drawerView) {
-
-        }
-
-        @Override
-        public void onDrawerStateChanged(int newState) {
-
-        }
-    };
 
     /* 뒤로가기 버튼 설정 */
     @Override
@@ -161,8 +147,89 @@ public class MainActivity extends AppCompatActivity {
         menu = (ImageView) findViewById(R.id.menu);
         webView = (WebView) findViewById(R.id.webView);
         drawerView = (View) findViewById(R.id.drawer);
-        settingLayout = (LinearLayout) findViewById(R.id.setting_layout);
+        pushAlarmLayout = (LinearLayout) findViewById(R.id.push_alarm);
+        inputLayout = (LinearLayout) findViewById(R.id.input_year);
+        appInfoLayout = (LinearLayout) findViewById(R.id.app_info);
+        maskCheckLayout = (LinearLayout) findViewById(R.id.mask_checked);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.refresh_btn);
+    }
+
+    private void showBirthDayPicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+
+        final Dialog birthDayDialog = new Dialog(this);
+        birthDayDialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        birthDayDialog.setContentView(R.layout.dialog_birthyear);
+
+        Button okBtn = (Button) birthDayDialog.findViewById(R.id.ok_button);
+        Button cancelBtn = (Button) birthDayDialog.findViewById(R.id.cancel_button);
+
+        final NumberPicker picker = (NumberPicker) birthDayDialog.findViewById(R.id.number_picker);
+        picker.setMinValue(year - 100);
+        picker.setMaxValue(year);
+        picker.setDescendantFocusability(NumberPicker.FOCUS_AFTER_DESCENDANTS);
+        setDividerColor(picker, android.R.color.white);
+        picker.setWrapSelectorWheel(false);
+        picker.setValue(year - 20);
+        picker.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker numberPicker, int oldVal, int newVal) {
+
+            }
+        });
+
+        okBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                // 출생년도 저장하기
+                saveRealm(picker.getValue());
+                Toast.makeText(MainActivity.this, "저장되었습니다!", Toast.LENGTH_SHORT).show();
+                birthDayDialog.dismiss();
+            }
+        });
+        cancelBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                birthDayDialog.dismiss();
+            }
+        });
+
+        birthDayDialog.show();
+    }
+
+    /* Realm 에 저장하기 */
+    private void saveRealm(int birthYear){
+        realm = Realm.getDefaultInstance();
+        UserModel userModel = new UserModel();
+
+        realm.beginTransaction();
+        userModel = realm.createObject(UserModel.class);
+        userModel.setBirthYear(birthYear);
+        realm.commitTransaction();
+        Log.d("출생년도", birthYear + "");
+    }
+
+    /* dialog 구분선 커스텀 */
+    private void setDividerColor(NumberPicker picker, int color) {
+        java.lang.reflect.Field[] pickerFields = NumberPicker.class.getDeclaredFields();
+        for (java.lang.reflect.Field pf : pickerFields) {
+            if (pf.getName().equals("mSelectionDivider")) {
+                pf.setAccessible(true);
+                try {
+                    ColorDrawable colorDrawable = new ColorDrawable(color);
+                    pf.set(picker, colorDrawable);
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (Resources.NotFoundException e) {
+                    e.printStackTrace();
+                } catch (IllegalAccessException e) {
+                    e.printStackTrace();
+                }
+                break;
+            }
+        }
     }
 
     /* 위치 권한 설정 */
@@ -191,6 +258,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
@@ -207,10 +275,12 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     public boolean checkLocationServicesStatis(){
         LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
         return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) || locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER);
     }
+
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -237,6 +307,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+
     private void checkRunTimePermission(){
         int hasFineLocationPermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_FINE_LOCATION);
         int hasCoarseLocationPermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.ACCESS_COARSE_LOCATION);
@@ -252,6 +323,12 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
+
+
+
+
 
     public void notification() {
 
@@ -300,4 +377,38 @@ public class MainActivity extends AppCompatActivity {
             return true;
         }
     }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+
+        if ((keyCode == KeyEvent.KEYCODE_BACK) && webView.canGoBack()) {
+            webView.goBack();
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+
+    DrawerLayout.DrawerListener listener = new DrawerLayout.DrawerListener() {
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+
+        }
+
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+
+        }
+    };
 }
