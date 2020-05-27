@@ -31,6 +31,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:tint="@color/black"
+            android:background="?attr/selectableItemBackground"
             app:srcCompat="@drawable/bars" />
 
         <View
@@ -45,7 +46,7 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/today_rule"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -58,7 +59,7 @@
             app:layout_constraintTop_toTopOf="@+id/view" />
 
         <TextView
-            android:id="@+id/textView7"
+            android:id="@+id/daily_rule_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="사람과 사람 사이, 두 팔 간격 건강 거리 두기"
