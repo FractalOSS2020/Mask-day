@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
@@ -16,10 +17,15 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.Calendar;
 
+import io.realm.Realm;
+import io.realm.RealmResults;
+
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private LinearLayout saveYearLayout, appInfoLayout;
     private ImageView backBtn;
+    private Realm realm;
+    private RealmResults<UserModel> userData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,11 +78,13 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
             }
         });
+
         okBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
                 // 출생년도 저장하기
+                saveRealm(picker.getValue());
                 Toast.makeText(SettingActivity.this, "저장되었습니다!", Toast.LENGTH_SHORT).show();
                 birthDayDialog.dismiss();
             }
@@ -91,6 +99,26 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         birthDayDialog.show();
     }
 
+    /* Realm 초기설정 */
+    private void getRealm(){
+        realm = Realm.getDefaultInstance();
+        userData = realm.where(UserModel.class).findAll();
+    }
+
+    /* Realm 에 저장하기 */
+    private void saveRealm(int birthYear){
+        realm = Realm.getDefaultInstance();
+        UserModel userModel = new UserModel();
+
+        realm.beginTransaction();
+        userModel = realm.createObject(UserModel.class);
+        userModel.setBirthYear(birthYear);
+        realm.commitTransaction();
+        Log.d("출생년도", birthYear + "");
+    }
+
+
+    /* dialog 구분선 커스텀 */
     private void setDividerColor(NumberPicker picker, int color) {
         java.lang.reflect.Field[] pickerFields = NumberPicker.class.getDeclaredFields();
         for (java.lang.reflect.Field pf : pickerFields) {
@@ -110,4 +138,6 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
             }
         }
     }
+
+
 }
