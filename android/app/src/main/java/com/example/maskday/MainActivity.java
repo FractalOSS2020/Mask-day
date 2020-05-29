@@ -29,6 +29,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -42,6 +43,7 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.Calendar;
+import java.util.Random;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -63,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private Realm realm;
     private RealmResults<UserModel> userData;
+    private TextView daily_rule;
+
+
 
 
     @Override
@@ -77,6 +82,7 @@ public class MainActivity extends AppCompatActivity {
         }
         Realm.init(this);
         init();
+        randomRule();
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
@@ -120,6 +126,9 @@ public class MainActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
                //어플 정보 볼 수 있는 Activity 로 이동
+               Intent intent = new Intent(MainActivity.this,AppInfoActivity.class);
+               startActivity(intent);
+
            }
        });
     }
@@ -152,6 +161,7 @@ public class MainActivity extends AppCompatActivity {
         appInfoLayout = (LinearLayout) findViewById(R.id.app_info);
         maskCheckLayout = (LinearLayout) findViewById(R.id.mask_checked);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.refresh_btn);
+        daily_rule = (TextView)findViewById(R.id.daily_rule_text);
     }
 
     private void showBirthDayPicker() {
@@ -204,10 +214,10 @@ public class MainActivity extends AppCompatActivity {
         realm = Realm.getDefaultInstance();
         UserModel userModel = new UserModel();
 
-        realm.beginTransaction();
-        userModel = realm.createObject(UserModel.class);
-        userModel.setBirthYear(birthYear);
-        realm.commitTransaction();
+//        realm.beginTransaction();
+//        userModel = realm.createObject(UserModel.class);
+//        userModel.setBirthYear(birthYear);
+//        realm.commitTransaction();
         Log.d("출생년도", birthYear + "");
     }
 
@@ -367,6 +377,21 @@ public class MainActivity extends AppCompatActivity {
 
         assert notificationManager != null;
         notificationManager.notify(1234, builder.build());
+
+    }
+
+
+    private void randomRule(){
+
+        String[] strings ={"증상이 있으면 빨리 코로나19 검사 받기","마스크 착용 생활화","30초 손씻기와 손 소독 자주하기","사람과 사람 사이, 두 팔 간격 건강 거리 두기"
+        ,"매일 2번 이상 환기, 주기적 소독","집회/모임/회식 자제하기","거리는 멀어져도 마음은 가까이"};
+
+        int randomNum = (int)(Math.random() * strings.length);
+        daily_rule.setText( strings[randomNum]);
+
+
+
+
 
     }
 
