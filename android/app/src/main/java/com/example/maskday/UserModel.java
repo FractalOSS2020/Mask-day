@@ -1,15 +1,32 @@
 package com.example.maskday;
 
-import io.realm.RealmObject;
+public class UserModel {
+    public String id;
+    public String userEmail;
+    public String title;
+    public String content;
 
-public class UserModel extends RealmObject {
-    private int birthYear;
-
-    public int getBirthYear() {
-        return birthYear;
+    public String getTitle() {
+        return title;
     }
 
-    public void setBirthYear(int birthYear) {
-        this.birthYear = birthYear;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
+
+    public String getUserEmail() {
+        return userEmail;
+    }
+
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 }
