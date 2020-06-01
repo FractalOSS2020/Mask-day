@@ -1,5 +1,7 @@
 package com.example.maskday.Fragment;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,9 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
-import com.example.maskday.BoardAdapter;
+import com.example.maskday.Activity.DetailActivity;
+import com.example.maskday.Adapter.BoardAdapter;
 import com.example.maskday.R;
-import com.example.maskday.UserModel;
+import com.example.maskday.RecyclerClickListener;
+import com.example.maskday.Model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -50,11 +54,13 @@ public class FreeBoardFragment extends Fragment {
 
         init(view);
         readFreeBoard();
+        selectBoard(view.getContext());
 
         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 readFreeBoard();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -77,8 +83,8 @@ public class FreeBoardFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        CollectionReference collectionReference = firebaseFirestore.collection("Free Board");
-        collectionReference.get().addOnCompleteListener(task -> {
+        CollectionReference collectionReference = firebaseFirestore.collection("Content");
+        collectionReference.whereEqualTo("board", "자유게시판").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 QuerySnapshot documentSnapshots = task.getResult();
                 userModelList = new ArrayList<>();
@@ -102,4 +108,24 @@ public class FreeBoardFragment extends Fragment {
             }
         });
     }
+
+    public void selectBoard(Context ctx) {
+        freeBoardRecyclerView.addOnItemTouchListener(new RecyclerClickListener.RecyclerTouchListener(getContext(), freeBoardRecyclerView, new RecyclerClickListener.ClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Intent detailIntent = new Intent(ctx, DetailActivity.class);
+                detailIntent.putExtra("id", userModelList.get(position).id);
+                detailIntent.putExtra("title", userModelList.get(position).title);
+                detailIntent.putExtra("content", userModelList.get(position).content);
+                detailIntent.putExtra("email", userModelList.get(position).userEmail);
+                ctx.startActivity(detailIntent);
+            }
+
+            @Override
+            public void onLongClick(View view, int position) {
+
+            }
+        }));
+    }
+
 }

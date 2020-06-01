@@ -9,4 +9,7 @@
     <string name="fifth_rule">매일 2번 이상 환기, 주기적 소독</string>
     <string name="sixth_rule">집회/모임/회식 자제하기</string>
     <string name="seventh_rule">거리는 멀어져도 마음은 가까이</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

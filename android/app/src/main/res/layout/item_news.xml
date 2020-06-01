@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+            <TextView
+                android:id="@+id/item_news_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="15sp"
+                android:textColor="@color/black"
+                android:ellipsize="end"
+                android:fontFamily="@font/nanumgothicbold"
+                android:layout_margin="6dp"
+                android:text="코로나19: 건강한 사람들이 백신 임상시험에 자원하는 이유" />
+
+            <TextView
+                android:id="@+id/item_news_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:textSize="10sp"
+                android:fontFamily="@font/nanumgothiclight"
+                android:text="Mon, 01 Jun 2020 07:56:34 GMT" />
+
+</LinearLayout>

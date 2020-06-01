@@ -1,10 +1,19 @@
-package com.example.maskday;
+package com.example.maskday.Model;
 
 public class UserModel {
     public String id;
     public String userEmail;
     public String title;
     public String content;
+    public String board;
+
+    public String getBoard() {
+        return board;
+    }
+
+    public void setBoard(String board) {
+        this.board = board;
+    }
 
     public String getTitle() {
         return title;

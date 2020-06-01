@@ -1,4 +1,4 @@
-package com.example.maskday;
+package com.example.maskday.Adapter;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,6 +7,9 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.maskday.R;
+import com.example.maskday.Model.UserModel;
 
 import java.util.List;
 import java.util.Map;

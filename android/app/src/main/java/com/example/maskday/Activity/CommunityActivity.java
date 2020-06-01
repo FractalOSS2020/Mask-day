@@ -8,7 +8,7 @@ import android.os.Bundle;
 import android.view.View;
 
 import com.example.maskday.R;
-import com.example.maskday.TabPagerAdapter;
+import com.example.maskday.Adapter.TabPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 
@@ -28,6 +28,7 @@ public class CommunityActivity extends AppCompatActivity {
 
         tabLayout.addTab(tabLayout.newTab().setText("자유게시판"));
         tabLayout.addTab(tabLayout.newTab().setText("증상질문게시판"));
+        tabLayout.addTab(tabLayout.newTab().setText("관련 뉴스"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         tabPagerAdapter = new TabPagerAdapter(getSupportFragmentManager(), tabLayout.getTabCount());
@@ -59,7 +60,7 @@ public class CommunityActivity extends AppCompatActivity {
         });
     }
 
-    private void init(){
+    private void init() {
         writingBtn = (FloatingActionButton) findViewById(R.id.writing_button);
         tabLayout = (TabLayout) findViewById(R.id.tabLayout);
         viewPager = (ViewPager) findViewById(R.id.view_pager);

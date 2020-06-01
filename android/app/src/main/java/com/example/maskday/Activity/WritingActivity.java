@@ -9,10 +9,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
 import com.example.maskday.R;
-import com.example.maskday.UserModel;
+import com.example.maskday.Model.UserModel;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +34,7 @@ public class WritingActivity extends AppCompatActivity {
     private EditText editTitle, editContent;
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firebaseFirestore;
+    private RadioGroup boardSelect;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,8 +55,8 @@ public class WritingActivity extends AppCompatActivity {
             public void onClick(View view) {
                 final String title = editTitle.getText().toString();
                 final String content = editContent.getText().toString();
-
-                saveContent(title, content);
+                final int radioId = boardSelect.getCheckedRadioButtonId();
+                saveContent(title, content, radioId);
             }
         });
     }
@@ -63,35 +66,40 @@ public class WritingActivity extends AppCompatActivity {
         saveBtn = (ImageView) findViewById(R.id.writing_save_button);
         editTitle = (EditText) findViewById(R.id.edit_title);
         editContent = (EditText) findViewById(R.id.edit_content);
+        boardSelect = (RadioGroup) findViewById(R.id.board_select);
     }
 
-    private void saveContent(String title, String content){
-        final ProgressDialog progressDialog = new ProgressDialog(this);
-        progressDialog.setTitle("업로드중...");
-        progressDialog.show();
-
+    private void saveContent(String title, String content, int radioId){
         UserModel userModel = new UserModel();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
         FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        userModel.userEmail = user.getEmail();
-        userModel.title = editTitle.getText().toString();
-        userModel.content = editContent.getText().toString();
+        RadioButton boardName = (RadioButton) findViewById(radioId);
+
+        userModel.userEmail = setUserName(user.getEmail());
+        userModel.title = title;
+        userModel.content = content;
+        userModel.board = boardName.getText().toString();
 
         if (userModel.title.isEmpty() || userModel.content.isEmpty()) {
             Toast.makeText(WritingActivity.this, "내용을 입력해주세요!", Toast.LENGTH_SHORT).show();
             return;
         }
 
+        final ProgressDialog progressDialog = new ProgressDialog(this);
+        progressDialog.setTitle("업로드중...");
+        progressDialog.show();
+
         Map<String, Object> contentMap = new HashMap<>();
 
         contentMap.put("user email", userModel.userEmail);
         contentMap.put("title", userModel.title);
         contentMap.put("content", userModel.content);
+        contentMap.put("board", userModel.board);
 
         CollectionReference reference = firebaseFirestore.collection("User");
-        reference.whereEqualTo("Email", user.getEmail()).get().addOnCompleteListener(task -> {
+        reference.whereEqualTo("email", user.getEmail()).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 QuerySnapshot snapshots = task.getResult();
                 for (QueryDocumentSnapshot queryDocumentSnapshot : snapshots) {
@@ -100,7 +108,7 @@ public class WritingActivity extends AppCompatActivity {
                                 @Override
                                 public void onSuccess(DocumentReference documentReference) {
                                     progressDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "업로드 완료!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "성공적으로 업로드 되었습니다.", Toast.LENGTH_SHORT).show();
                                     finish();
                                 }
                             })
@@ -110,7 +118,7 @@ public class WritingActivity extends AppCompatActivity {
                                     String error = e.getMessage();
                                     Log.d("WritingActivity", "Error :" + error);
                                     progressDialog.dismiss();
-                                    Toast.makeText(getApplicationContext(), "업로드 실패!", Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(getApplicationContext(), "업로드에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                                 }
                             });
                 }
@@ -119,6 +127,15 @@ public class WritingActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private String setUserName(String userName) {
+
+        String[] email = userName.split("@");
+        String editEmail = email[0];
+
+        return editEmail.substring(0,3) + "**";
 
     }
 }

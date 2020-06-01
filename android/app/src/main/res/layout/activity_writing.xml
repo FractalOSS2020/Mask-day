@@ -26,28 +26,54 @@
                 android:layout_width="30dp"
                 android:layout_height="30dp"
                 android:layout_marginLeft="5dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="8dp"
                 app:srcCompat="@drawable/back" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="8dp"
-                android:layout_marginTop="5dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
+                android:fontFamily="@font/nanumgothicbold"
                 android:text="작성"
                 android:textColor="@color/black"
                 android:textSize="20sp" />
 
             <ImageView
                 android:id="@+id/writing_save_button"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="5dp"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:layout_marginTop="10dp"
                 android:layout_marginRight="8dp"
                 app:srcCompat="@drawable/save" />
 
         </LinearLayout>
+
+        <RadioGroup
+            android:id="@+id/board_select"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radioButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="5dp"
+                android:checked="true"
+                android:text="자유게시판" />
+
+            <RadioButton
+                android:id="@+id/radioButton2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:layout_marginLeft="10dp"
+                android:text="증상질문게시판" />
+        </RadioGroup>
 
         <EditText
             android:id="@+id/edit_title"
@@ -57,7 +83,7 @@
             android:backgroundTint="@color/colorPrimaryDark"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="10dp"
             android:hint="제목"
             android:textColor="@color/black"
             android:textAlignment="center"

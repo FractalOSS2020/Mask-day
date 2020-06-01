@@ -13,9 +13,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.example.maskday.BoardAdapter;
+import com.example.maskday.Adapter.BoardAdapter;
 import com.example.maskday.R;
-import com.example.maskday.UserModel;
+import com.example.maskday.Model.UserModel;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.CollectionReference;
@@ -56,6 +56,7 @@ public class QnAFragment extends Fragment {
             @Override
             public void onRefresh() {
                 readQnABoard();
+                swipeRefreshLayout.setRefreshing(false);
             }
         });
 
@@ -79,8 +80,8 @@ public class QnAFragment extends Fragment {
         firebaseAuth = FirebaseAuth.getInstance();
         final FirebaseUser user = firebaseAuth.getCurrentUser();
 
-        CollectionReference collectionReference = firebaseFirestore.collection("QnA Board");
-        collectionReference.get().addOnCompleteListener(task -> {
+        CollectionReference collectionReference = firebaseFirestore.collection("Content");
+        collectionReference.whereEqualTo("board", "증상질문게시판").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 QuerySnapshot documentSnapshots = task.getResult();
                 userModelList = new ArrayList<>();

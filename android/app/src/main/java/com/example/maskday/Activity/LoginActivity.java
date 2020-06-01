@@ -57,7 +57,7 @@ public class LoginActivity extends AppCompatActivity {
         firebaseFirestore = FirebaseFirestore.getInstance();
         signInButton = (SignInButton) findViewById(R.id.google_login_btn);
 
-        final GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+        GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id))
                 .requestEmail()
                 .build();
@@ -101,8 +101,8 @@ public class LoginActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             Toast.makeText(LoginActivity.this, "로그인에 성공하였습니다!", Toast.LENGTH_SHORT).show();
                             saveUserInfo(firebaseAuth.getCurrentUser().getEmail());
-                            finish();
                             startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                            finish();
                         } else {
                             Toast.makeText(LoginActivity.this, "로그인에 실패하였습니다.", Toast.LENGTH_SHORT).show();
                             return;
@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
         Map<String, String> user_info = new HashMap<>();
         user_info.put("email", userEmail);
 
-        firebaseFirestore.collection("User").document(userEmail)
+        firebaseFirestore.collection("User").document()
                 .set(user_info)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
