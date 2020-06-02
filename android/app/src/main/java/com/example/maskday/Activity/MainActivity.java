@@ -15,12 +15,14 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
+import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private LinearLayout pushAlarmLayout, communityLayout, appInfoLayout, maskCheckLayout;
     private ImageView menu;
     private FloatingActionButton floatingActionButton;
+    private TextView daily_rule;
 
 
     @Override
@@ -61,11 +64,19 @@ public class MainActivity extends AppCompatActivity {
             checkRunTimePermission();
         }
         init();
+        randomRule();
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClientClass());
+        webView.setWebChromeClient(new WebChromeClient(){
+            @Override
+            public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
+                super.onGeolocationPermissionsShowPrompt(origin, callback);
+                callback.invoke(origin, true, false);
+            }
+        });
 
         menu.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -105,6 +116,8 @@ public class MainActivity extends AppCompatActivity {
            @Override
            public void onClick(View view) {
                //어플 정보 볼 수 있는 Activity 로 이동
+               Intent intent = new Intent(MainActivity.this,AppInfoActivity.class);
+               startActivity(intent);
            }
        });
     }
@@ -137,6 +150,7 @@ public class MainActivity extends AppCompatActivity {
         appInfoLayout = (LinearLayout) findViewById(R.id.app_info);
         maskCheckLayout = (LinearLayout) findViewById(R.id.mask_checked);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.refresh_btn);
+        daily_rule = (TextView)findViewById(R.id.daily_rule_text);
     }
 
 
@@ -233,25 +247,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    /* dialog 구분선 커스텀 */
-    private void setDividerColor(NumberPicker picker, int color) {
-        java.lang.reflect.Field[] pickerFields = NumberPicker.class.getDeclaredFields();
-        for (java.lang.reflect.Field pf : pickerFields) {
-            if (pf.getName().equals("mSelectionDivider")) {
-                pf.setAccessible(true);
-                try {
-                    ColorDrawable colorDrawable = new ColorDrawable(color);
-                    pf.set(picker, colorDrawable);
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (Resources.NotFoundException e) {
-                    e.printStackTrace();
-                } catch (IllegalAccessException e) {
-                    e.printStackTrace();
-                }
-                break;
-            }
-        }
+    private void randomRule(){
+
+        String[] strings ={"증상이 있으면 빨리 코로나19 검사 받기","마스크 착용 생활화","30초 손씻기와 손 소독 자주하기","사람과 사람 사이, 두 팔 간격 건강 거리 두기"
+                ,"매일 2번 이상 환기, 주기적 소독","집회/모임/회식 자제하기","거리는 멀어져도 마음은 가까이"};
+
+        int randomNum = (int)(Math.random() * strings.length);
+        daily_rule.setText( strings[randomNum]);
+
     }
 
 

@@ -40,9 +40,10 @@ public class NewsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_news, container, false);
 
         init(view);
+        String search = "제주";
 
         AsyncCrawl asyncCrawl = new AsyncCrawl();
-        asyncCrawl.execute();
+        asyncCrawl.execute(search);
 
         return view;
     }
@@ -58,11 +59,11 @@ public class NewsFragment extends Fragment {
     private class AsyncCrawl extends AsyncTask<String, Void, Elements> {
         @Override
         protected Elements doInBackground(String... strings) {
-//            if (strings.length != 1) {
-//                throw new IllegalArgumentException();
-//            }
-//            String term = strings[0];
-            Elements items = BaseCrawler.News();
+            if (strings.length != 1) {
+                throw new IllegalArgumentException();
+            }
+            String term = strings[0];
+            Elements items = BaseCrawler.News(term);
 
             return items;
         }
