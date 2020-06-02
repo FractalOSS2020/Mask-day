@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_margin="8dp"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/item_user_email"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="xxrc***"
+        android:textSize="13sp"
+        android:textColor="@color/black"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/nanumgothicbold"/>
+
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="마스크 5부제 폐지됨!"
+        android:textColor="@color/black"
+        android:textSize="14sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/nanumgothic"/>
+
+    <TextView
+        android:id="@+id/item_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:fontFamily="@font/nanumgothiclight"
+        android:maxLines="1"
+        android:text="좋은건데 씁쓸하다" />
+</LinearLayout>

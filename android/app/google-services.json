@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "821235159466",
+    "firebase_url": "https://buy-mask-fdeed.firebaseio.com",
+    "project_id": "buy-mask-fdeed",
+    "storage_bucket": "buy-mask-fdeed.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:821235159466:android:c585d6cd7451c56fdd1bd3",
+        "android_client_info": {
+          "package_name": "com.example.maskday"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "821235159466-arakkme7lki5rn301vvbc3fcuvglgm5a.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.maskday",
+            "certificate_hash": "2cab71233384e9d40225ad3c4c3aa5fcd652abbb"
+          }
+        },
+        {
+          "client_id": "821235159466-etmfi96kukp3538s9uenqqie3l6kp2h2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDN-eHHWJZCSfno6_5T5zb8GcYBtRXKlz4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "821235159466-etmfi96kukp3538s9uenqqie3l6kp2h2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

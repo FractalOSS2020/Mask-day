@@ -9,4 +9,14 @@
     <string name="fifth_rule">매일 2번 이상 환기, 주기적 소독</string>
     <string name="sixth_rule">집회/모임/회식 자제하기</string>
     <string name="seventh_rule">거리는 멀어져도 마음은 가까이</string>
+
+    <string name="app_info_api">&lt; Kakao Maps Api &gt;\n
+http://apis.map.kakao.com\n
+서비스 약관 \n https://developers.kakao.com/terms/latest/ko/site-terms\n
+운영정책 \n https://developers.kakao.com/terms/latest/ko/site-policies\n
+Copyright© Kakao Corp. All rights reserved.</string>
+    <string name="app_info_open">&lt;주소/좌표 기준 판매처별 공적 마스크 판매정보 제공 서비스&gt;\n
+https://www.data.go.kr/data/15057622/openapi.do \n
+이용허락범위 : 제한 없음 \n
+제공자 : 공공데이터활용지원센터, 등록일자 : 2020-03-08 \n</string>
 </resources>
