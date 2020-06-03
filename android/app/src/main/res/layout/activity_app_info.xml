@@ -52,7 +52,6 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/nanumgothic"
         android:text="@string/app_info_open"
-        android:fontFamily="@font/nanumgothic"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
         android:layout_marginTop="10dp"
