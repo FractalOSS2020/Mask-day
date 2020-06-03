@@ -84,8 +84,10 @@
     </LinearLayout>
 
     <LinearLayout
+        android:id="@+id/call_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
         android:orientation="horizontal">
 
         <ImageView
@@ -98,11 +100,11 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/black"
-            android:padding="10dp"
             android:fontFamily="@font/nanumgothic"
-            android:textSize="16sp"
-            android:text="선별진료소 전화하기" />
+            android:padding="10dp"
+            android:text="선별진료소 전화하기"
+            android:textColor="@color/black"
+            android:textSize="16sp" />
     </LinearLayout>
 
     <LinearLayout

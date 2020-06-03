@@ -1,6 +1,7 @@
 package com.example.maskday.Activity;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.DialogInterface;
@@ -9,6 +10,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.ColorDrawable;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -40,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String CHANNEL_ID = "10001";
     private static final int GPS_ENABLE_REQUEST_CODE = 2001;
     private static final int PERMISSIONS_REQUEST_CODE = 100;
-    String[] REQUEST_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};    
+    String[] REQUEST_PERMISSIONS = {Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION};
     private long backPressedTime = 0;
     private DrawerLayout drawerLayout;
     private View drawerView;
@@ -50,13 +52,14 @@ public class MainActivity extends AppCompatActivity {
     private ImageView menu;
     private FloatingActionButton floatingActionButton;
     private TextView daily_rule;
+    private LinearLayout call_layout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        if (!checkLocationServicesStatis()){
+        if (!checkLocationServicesStatis()) {
             GPSSetting();
         } else {
             checkRunTimePermission();
@@ -68,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
         webView.loadUrl(url);
         webView.setWebChromeClient(new WebChromeClient());
         webView.setWebViewClient(new WebViewClientClass());
-        webView.setWebChromeClient(new WebChromeClient(){
+        webView.setWebChromeClient(new WebChromeClient() {
             @Override
             public void onGeolocationPermissionsShowPrompt(String origin, GeolocationPermissions.Callback callback) {
                 super.onGeolocationPermissionsShowPrompt(origin, callback);
@@ -109,15 +112,32 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-       /* 어플 정보 */
-       appInfoLayout.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-               //어플 정보 볼 수 있는 Activity 로 이동
-               Intent intent = new Intent(MainActivity.this,AppInfoActivity.class);
-               startActivity(intent); }
+        /* 어플 정보 */
+        appInfoLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //어플 정보 볼 수 있는 Activity 로 이동
+                Intent intent = new Intent(MainActivity.this, AppInfoActivity.class);
+                startActivity(intent);
+            }
+        });
+
+        call_layout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.d("!!!!!","CLICK");
+                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent.setData(Uri.parse("tel:0647284010"));
+                try {
+                    startActivity(intent);
+               } catch (Exception e){
+                   e.printStackTrace();
+               }
+           }
        });
+
     }
+
 
 
 
@@ -148,6 +168,7 @@ public class MainActivity extends AppCompatActivity {
         maskCheckLayout = (LinearLayout) findViewById(R.id.mask_checked);
         floatingActionButton = (FloatingActionButton) findViewById(R.id.refresh_btn);
         daily_rule = (TextView)findViewById(R.id.daily_rule_text);
+        call_layout = (LinearLayout)findViewById(R.id.call_layout);
     }
 
     /* 위치 권한 설정 */
