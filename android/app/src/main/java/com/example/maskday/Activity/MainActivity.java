@@ -2,8 +2,11 @@ package com.example.maskday.Activity;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.AlarmManager;
 import android.app.AlertDialog;
+import android.app.PendingIntent;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -21,9 +24,12 @@ import android.webkit.GeolocationPermissions;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.NumberPicker;
+import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -34,8 +40,11 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
+import com.example.maskday.BaseAlarm;
 import com.example.maskday.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -53,6 +62,8 @@ public class MainActivity extends AppCompatActivity {
     private FloatingActionButton floatingActionButton;
     private TextView daily_rule;
     private LinearLayout call_layout;
+    private AlarmManager alarmManager;
+    private Switch alarmSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,6 +77,9 @@ public class MainActivity extends AppCompatActivity {
         }
         init();
         randomRule();
+
+        alarmManager = (AlarmManager) getApplicationContext().getSystemService(Context.ALARM_SERVICE);
+        regist();
 
         webView.getSettings().setJavaScriptEnabled(true);
         webView.loadUrl(url);
@@ -136,6 +150,19 @@ public class MainActivity extends AppCompatActivity {
            }
        });
 
+        alarmSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if (compoundButton.isChecked()) {
+                    regist();
+                }
+                else {
+                    unregist();
+                }
+            }
+        });
+
     }
 
 
@@ -169,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
         floatingActionButton = (FloatingActionButton) findViewById(R.id.refresh_btn);
         daily_rule = (TextView)findViewById(R.id.daily_rule_text);
         call_layout = (LinearLayout)findViewById(R.id.call_layout);
+
+        alarmSwitch = (Switch) findViewById(R.id.switch_btn);
     }
 
     /* 위치 권한 설정 */
@@ -274,6 +303,23 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    public void regist() {
+        Intent intent = new Intent(this, BaseAlarm.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 9);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.set(Calendar.MILLISECOND, 0);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 1000*60*20, pendingIntent);
+    }
+
+    public void unregist() {
+        Intent intent = new Intent(this, BaseAlarm.class);
+        PendingIntent pIntent = PendingIntent.getBroadcast(this, 0, intent, 0);
+        alarmManager.cancel(pIntent);
+    }
 
     private class WebViewClientClass extends WebViewClient {
         @Override
