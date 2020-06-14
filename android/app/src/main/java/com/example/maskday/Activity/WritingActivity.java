@@ -25,6 +25,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,7 +60,12 @@ public class WritingActivity extends AppCompatActivity {
                 final String title = editTitle.getText().toString();
                 final String content = editContent.getText().toString();
                 final int radioId = boardSelect.getCheckedRadioButtonId();
-                saveContent(title, content, radioId);
+
+                Date currentTime = Calendar.getInstance().getTime();
+                SimpleDateFormat format = new SimpleDateFormat("yyyy.MM.dd");
+                String timestamp = format.format(currentTime);
+
+                saveContent(title, content, radioId, timestamp);
             }
         });
     }
@@ -69,7 +78,7 @@ public class WritingActivity extends AppCompatActivity {
         boardSelect = (RadioGroup) findViewById(R.id.board_select);
     }
 
-    private void saveContent(String title, String content, int radioId){
+    private void saveContent(String title, String content, int radioId, String timeStamp){
         UserModel userModel = new UserModel();
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseFirestore = FirebaseFirestore.getInstance();
@@ -81,6 +90,7 @@ public class WritingActivity extends AppCompatActivity {
         userModel.title = title;
         userModel.content = content;
         userModel.board = boardName.getText().toString();
+        userModel.timestamp = timeStamp;
 
         if (userModel.title.isEmpty() || userModel.content.isEmpty()) {
             Toast.makeText(WritingActivity.this, "내용을 입력해주세요!", Toast.LENGTH_SHORT).show();
@@ -97,6 +107,7 @@ public class WritingActivity extends AppCompatActivity {
         contentMap.put("title", userModel.title);
         contentMap.put("content", userModel.content);
         contentMap.put("board", userModel.board);
+        contentMap.put("timestamp", userModel.timestamp);
 
         CollectionReference reference = firebaseFirestore.collection("User");
         reference.whereEqualTo("email", user.getEmail()).get().addOnCompleteListener(task -> {

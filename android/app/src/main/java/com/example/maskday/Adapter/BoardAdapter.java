@@ -12,23 +12,21 @@ import com.example.maskday.R;
 import com.example.maskday.Model.UserModel;
 
 import java.util.List;
-import java.util.Map;
 
 public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> {
     private List<UserModel> userModelList;
-    private Map<String, UserModel> userModelMap;
 
     public BoardAdapter(List<UserModel> userModelsList) {
         this.userModelList = userModelsList;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
-        public TextView titleTextView, contentTextView, userTextView;
+        public TextView titleTextView, timeTextView, contentTextView;
         public ViewHolder(View v) {
             super(v);
             titleTextView = v.findViewById(R.id.item_title);
+            timeTextView = v.findViewById(R.id.item_timestamp);
             contentTextView = v.findViewById(R.id.item_content);
-            userTextView = v.findViewById(R.id.item_user_email);
         }
     }
 
@@ -44,8 +42,8 @@ public class BoardAdapter extends RecyclerView.Adapter<BoardAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         holder.titleTextView.setText(userModelList.get(position).getTitle());
+        holder.timeTextView.setText(userModelList.get(position).getTimestamp());
         holder.contentTextView.setText(userModelList.get(position).getContent());
-        holder.userTextView.setText(userModelList.get(position).getUserEmail());
     }
 
     @Override
