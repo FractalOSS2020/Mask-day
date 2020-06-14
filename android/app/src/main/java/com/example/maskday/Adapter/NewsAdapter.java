@@ -1,5 +1,9 @@
 package com.example.maskday.Adapter;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,17 +20,29 @@ import java.util.List;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     private List<NewsModel> newsModelList;
 
+
     public NewsAdapter(List<NewsModel> newsModelList) {
         this.newsModelList = newsModelList;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView titleTextView, contentTextView;
+        public String link = "";
 
         public ViewHolder(View v) {
             super(v);
             titleTextView = v.findViewById(R.id.item_news_title);
             contentTextView = v.findViewById(R.id.item_news_content);
+
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Context ctx = view.getContext();
+                    Log.d("!!!!!!!!!", link + "");
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(link));
+                    ctx.startActivity(intent);
+                }
+            });
         }
     }
 
@@ -43,6 +59,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolder> {
     public void onBindViewHolder(@NonNull NewsAdapter.ViewHolder holder, int position) {
         holder.titleTextView.setText(newsModelList.get(position).getNewsTitle());
         holder.contentTextView.setText(newsModelList.get(position).getNewsContent());
+        holder.link = newsModelList.get(position).getNewsLink();
     }
 
     @Override

@@ -1,7 +1,11 @@
 package com.example.maskday.Fragment;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +16,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
+import com.example.maskday.Activity.DetailActivity;
+import com.example.maskday.Activity.NewsDetailActivity;
 import com.example.maskday.Adapter.NewsAdapter;
 import com.example.maskday.BaseCrawler;
 import com.example.maskday.Model.NewsModel;
 import com.example.maskday.R;
+import com.example.maskday.RecyclerClickListener;
 
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -31,6 +38,7 @@ public class NewsFragment extends Fragment {
     private List<NewsModel> newsModelList;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+
     public NewsFragment() {
     }
 
@@ -45,6 +53,16 @@ public class NewsFragment extends Fragment {
         AsyncCrawl asyncCrawl = new AsyncCrawl();
         asyncCrawl.execute(search);
 
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                AsyncCrawl asyncCrawl = new AsyncCrawl();
+                asyncCrawl.execute(search);
+                swipeRefreshLayout.setRefreshing(false);
+            }
+        });
+
+
         return view;
     }
 
@@ -54,6 +72,7 @@ public class NewsFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         newsRecyclerView.setLayoutManager(layoutManager);
         swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.news_swipe_layout);
+        swipeRefreshLayout.setColorSchemeColors(getResources().getColor(R.color.colorPrimary));
     }
 
     private class AsyncCrawl extends AsyncTask<String, Void, Elements> {
@@ -65,16 +84,9 @@ public class NewsFragment extends Fragment {
             String term = strings[0];
             Elements items = BaseCrawler.News(term);
 
-            return items;
-        }
-
-        @Override
-        protected void onPostExecute(Elements elements) {
-            super.onPostExecute(elements);
-
-            if (elements != null) {
+            if (items != null) {
                 newsModelList = new ArrayList<>();
-                for (Element item : elements) {
+                for (Element item : items) {
                     NewsModel newsModel = new NewsModel();
 
                     String title = item.select("title").text();
@@ -82,16 +94,29 @@ public class NewsFragment extends Fragment {
                     String pubDate = item.select("pubDate").text();
 
                     newsModel.setNewsTitle(title);
-                    newsModel.newsContent = pubDate;
+                    newsModel.setNewsContent(pubDate);
+                    newsModel.setNewsLink(link);
+
+                    Log.d("!!!", newsModel.getNewsLink());
 
                     newsModelList.add(newsModel);
                 }
 
-                newsAdapter = new NewsAdapter(newsModelList);
-                newsRecyclerView.setAdapter(newsAdapter);
+//                newsAdapter = new NewsAdapter(newsModelList);
+//                newsRecyclerView.setAdapter(newsAdapter);
             }
+
+            return items;
         }
 
+        @Override
+        protected void onPostExecute(Elements elements) {
+            super.onPostExecute(elements);
 
+            newsAdapter = new NewsAdapter(newsModelList);
+            newsRecyclerView.setAdapter(newsAdapter);
+
+        }
     }
+
 }
