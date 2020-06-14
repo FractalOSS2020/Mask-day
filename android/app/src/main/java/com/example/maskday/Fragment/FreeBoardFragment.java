@@ -96,6 +96,7 @@ public class FreeBoardFragment extends Fragment {
                     userModel.id = document.getId();
                     userModel.title = (String) contentMap.get("title");
                     userModel.content = (String) contentMap.get("content");
+                    userModel.timestamp = (String) contentMap.get("timestamp");
                     userModel.userEmail = (String) contentMap.get("user email");
 
                     userModelList.add(userModel);
@@ -109,7 +110,7 @@ public class FreeBoardFragment extends Fragment {
         });
     }
 
-    public void selectBoard(Context ctx) {
+    private void selectBoard(Context ctx) {
         freeBoardRecyclerView.addOnItemTouchListener(new RecyclerClickListener.RecyclerTouchListener(getContext(), freeBoardRecyclerView, new RecyclerClickListener.ClickListener() {
             @Override
             public void onClick(View view, int position) {
@@ -117,6 +118,7 @@ public class FreeBoardFragment extends Fragment {
                 detailIntent.putExtra("id", userModelList.get(position).id);
                 detailIntent.putExtra("title", userModelList.get(position).title);
                 detailIntent.putExtra("content", userModelList.get(position).content);
+                detailIntent.putExtra("timestamp", userModelList.get(position).timestamp);
                 detailIntent.putExtra("email", userModelList.get(position).userEmail);
                 ctx.startActivity(detailIntent);
             }

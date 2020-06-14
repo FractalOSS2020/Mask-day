@@ -12,11 +12,13 @@ import com.example.maskday.Model.CommentModel;
 import com.example.maskday.R;
 
 import java.util.List;
-import java.util.Map;
 
-public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
+public class  CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHolder> {
     private List<CommentModel> commentAdapterList;
-    private Map<String, CommentAdapter> commentAdapterMap;
+
+    public CommentAdapter(List<CommentModel> commentAdapterList) {
+        this.commentAdapterList = commentAdapterList;
+    }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
         public TextView comment_tv, comment_user;
@@ -28,24 +30,20 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.ViewHold
         }
     }
 
+    @NonNull
     @Override
     public CommentAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item_comment, parent, false);
-        CommentAdapter.ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+        ViewHolder vh = new ViewHolder(view);
+        return vh;
     }
-
-    public CommentAdapter(List<CommentModel> commentAdapterList) {
-        this.commentAdapterList = commentAdapterList;
-    }
-
 
     @Override
-    public void onBindViewHolder(@NonNull CommentAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
 
-        holder.comment_user.setText(commentAdapterList.get(position).commentUser);
-        holder.comment_tv.setText(commentAdapterList.get(position).commentContent);
+        holder.comment_user.setText(commentAdapterList.get(position).getCommentUser());
+        holder.comment_tv.setText(commentAdapterList.get(position).getCommentContent());
     }
 
     @Override

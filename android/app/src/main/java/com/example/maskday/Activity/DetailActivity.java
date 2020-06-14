@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.DividerItemDecoration;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.maskday.Adapter.CommentAdapter;
@@ -42,6 +44,7 @@ public class DetailActivity extends AppCompatActivity {
     private List<CommentModel> commentModelList;
     private CommentAdapter commentAdapter;
     private RecyclerView commentRecyclerView;
+    RecyclerView.LayoutManager layoutManager;
 
     private String title, content, user, docId;
     private String comment;
@@ -88,12 +91,13 @@ public class DetailActivity extends AppCompatActivity {
         userTextView = (TextView) findViewById(R.id.detail_user);
         backBtn = (ImageView) findViewById(R.id.detail_back_btn);
         view = (View) findViewById(R.id.detail_divider);
-        view.setVisibility(View.GONE);
 
         inputComment = (EditText) findViewById(R.id.input_comment);
         saveCommentBtn = (ImageView) findViewById(R.id.save_comment);
         commentRecyclerView = (RecyclerView) findViewById(R.id.comment_list);
-
+        layoutManager = new LinearLayoutManager(this);
+        commentRecyclerView.setLayoutManager(layoutManager);
+        commentRecyclerView.addItemDecoration(new DividerItemDecoration(this, 1));
         firebaseFirestore = FirebaseFirestore.getInstance();
     }
 
@@ -104,7 +108,8 @@ public class DetailActivity extends AppCompatActivity {
 
         comment = inputComment.getText().toString();
         CollectionReference collectionReference = firebaseFirestore.collection("Content").document(docId).collection("Comment");
-        commentMap.put("user email", user.getEmail());
+        String email = setUserName(user.getEmail());
+        commentMap.put("user email", email);
         commentMap.put("comment", comment);
 
         collectionReference.add(commentMap).addOnCompleteListener(new OnCompleteListener<DocumentReference>() {
@@ -123,6 +128,8 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void readComment() {
+        firebaseFirestore = FirebaseFirestore.getInstance();
+
         CollectionReference collectionReference = firebaseFirestore.collection("Content").document(docId).collection("Comment");
         collectionReference.get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -136,7 +143,18 @@ public class DetailActivity extends AppCompatActivity {
                     commentModel.commentContent = (String) commentMap.get("comment");
                     commentModel.commentUser = (String) commentMap.get("user email");
 
+                    Log.d("!!!DETAIL", commentModel.commentContent);
+
                     commentModelList.add(commentModel);
+
+                    Log.d("DetailActivity", commentModelList.size() + "");
+
+//                    Collections.sort(commentModelList, new Comparator<CommentModel>() {
+//                        @Override
+//                        public int compare(CommentModel o1, CommentModel o2) {
+//                            return o2.commentTimeStamp.compareTo(o1.commentTimeStamp);
+//                        }
+//                    });
 
                 }
                 commentAdapter = new CommentAdapter(commentModelList);
@@ -146,6 +164,15 @@ public class DetailActivity extends AppCompatActivity {
                 Log.d("DetailActivity", "get failed with," + task.getException());
             }
         });
+    }
+
+    private String setUserName(String userName) {
+
+        String[] email = userName.split("@");
+        String editEmail = email[0];
+
+        return editEmail.substring(0,3) + "**";
+
     }
 
 }

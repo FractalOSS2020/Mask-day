@@ -6,6 +6,15 @@ public class UserModel {
     public String title;
     public String content;
     public String board;
+    public String timestamp;
+
+    public String getTimestamp() {
+        return timestamp;
+    }
+
+    public void setTimestamp(String timestamp) {
+        this.timestamp = timestamp;
+    }
 
     public String getBoard() {
         return board;
