@@ -6,7 +6,8 @@
     android:layout_height="match_parent"
     tools:context=".AppInfoActivity"
     android:orientation="vertical"
-    android:background="@color/white">
+    android:background="@color/white"
+    android:id="@+id/app_info_layout">
 
     <LinearLayout
         android:layout_width="wrap_content"
