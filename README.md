@@ -1,6 +1,6 @@
 # Mask-day
 
-<img src="https://github.com/FractalOSS2020/Mask-day/blob/master/logo.png?raw=true" alt="logo" style="zoom: 100%;" />
+<img src="https://github.com/FractalOSS2020/Mask-day/blob/master/logo.png?raw=true" alt="logo" style="zoom: 20%;" />
 
 ## 팀 소개
 
