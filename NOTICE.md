@@ -7,5 +7,6 @@ Jsoup
 ThirdParty
 -----
 - https://github.com/badro97/ThirdParty
+- Copyright (c) 2020 ThirdParty
 - MIT License
 
